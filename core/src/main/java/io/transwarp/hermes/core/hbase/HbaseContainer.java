@@ -14,7 +14,7 @@ public class HbaseContainer {
     private static ArrayBlockingQueue<HbaseModel> updQueue;
     private static ArrayBlockingQueue<HbaseModel> deleteQueue;
     private static HbaseContainer hbaseContainer = null;
-    private static final int HBASE_OPERATION_MAX_SIZE = 50;
+    private static final int HBASE_OPERATION_MAX_SIZE = 5000;
 
     public HbaseContainer() {
         putQueue = new ArrayBlockingQueue<HbaseModel>(HBASE_OPERATION_MAX_SIZE);
@@ -22,17 +22,30 @@ public class HbaseContainer {
         deleteQueue = new ArrayBlockingQueue<HbaseModel>(HBASE_OPERATION_MAX_SIZE);
     }
 
-    public static synchronized HbaseContainer getInstance() {
+    public static synchr
+    onized HbaseContainer getInstance() {
         if(hbaseContainer == null) {
             hbaseContainer = new HbaseContainer();
         }
         return hbaseContainer;
     }
 
+    public static int getPutQueueSize() {
+        return putQueue.size();
+    }
+
+    public static int getUpdQueueSize() {
+        return updQueue.size();
+    }
+
+    public static int getDeleteQueueSize() {
+        return deleteQueue.size();
+    }
+
     public void push2PutQueue(HbaseModel hbaseModel) {
         try {
             putQueue.put(hbaseModel);
-            System.out.println("put putQueue " + putQueue.size());
+         //   System.out.println("put putQueue " + putQueue.size());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -40,7 +53,7 @@ public class HbaseContainer {
 
     public HbaseModel fetchHbaseFromPutQueue() {
         try {
-            System.out.println("take putQueue " + putQueue.size());
+         //   System.out.println("take putQueue " + putQueue.size());
             return putQueue.take();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -51,7 +64,7 @@ public class HbaseContainer {
     public void push2UpdQueue(HbaseModel hbaseModel) {
         try {
             updQueue.put(hbaseModel);
-            System.out.println("put updQueue" + updQueue.size());
+        //    System.out.println("put updQueue" + updQueue.size());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -59,7 +72,7 @@ public class HbaseContainer {
 
     public HbaseModel fetchHbaseFromUpdQueue() {
         try {
-            System.out.println("take updQueue" + updQueue.size());
+       //     System.out.println("take updQueue" + updQueue.size());
             return updQueue.take();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -70,7 +83,7 @@ public class HbaseContainer {
     public void push2DeleteQueue(HbaseModel hbaseModel) {
         try {
             deleteQueue.put(hbaseModel);
-            System.out.println("put " + deleteQueue.size());
+        //    System.out.println("put " + deleteQueue.size());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -78,7 +91,7 @@ public class HbaseContainer {
 
     public HbaseModel fetchHbaseFromDeleteQueue() {
         try {
-            System.out.println("take " + deleteQueue.size());
+        //    System.out.println("take " + deleteQueue.size());
             return deleteQueue.take();
         } catch (InterruptedException e) {
             e.printStackTrace();

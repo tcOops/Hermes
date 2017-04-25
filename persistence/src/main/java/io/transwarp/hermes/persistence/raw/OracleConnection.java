@@ -37,19 +37,6 @@ public class OracleConnection {
         }
     }
 
-    public static void main(String[] args) {
-       /* try {
-            InputStream is = OracleConnection.class.getClassLoader().getResourceAsStream("config/secret.properties");
-            Properties secretProps = new Properties();
-            secretProps.load(is);
-
-            String redoLogDictionary = secretProps.getProperty("REDO_LOG_DICTIONARY_FILE_PATH");
-            System.out.println(redoLogDictionary);
-        } catch (Exception e) {
-
-        }*/
-    }
-
     @Override
     protected void finalize() throws Throwable {
         conn.close();
@@ -74,5 +61,18 @@ public class OracleConnection {
 
     public void setStartSCN(int startSCN) {
         this.startSCN = startSCN;
+    }
+
+    public static void main(String[] args) {
+       /* try {
+            InputStream is = OracleConnection.class.getClassLoader().getResourceAsStream("config/secret.properties");
+            Properties secretProps = new Properties();
+            secretProps.load(is);
+
+            String redoLogDictionary = secretProps.getProperty("REDO_LOG_DICTIONARY_FILE_PATH");
+            System.out.println(redoLogDictionary);
+        } catch (Exception e) {
+
+        }*/
     }
 }

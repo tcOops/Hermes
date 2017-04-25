@@ -25,7 +25,7 @@ public class SQLContainer {
     public void pushSQL2Container(String rawSQL) {
         try {
             sqlQueue.put(rawSQL);
-            System.out.println("put " + sqlQueue.size());
+       //     System.out.println("put " + sqlQueue.size());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -33,7 +33,7 @@ public class SQLContainer {
 
     public String fetchSQLFromContainer() {
         try {
-            System.out.println("take " + sqlQueue.size());
+        //    System.out.println("take " + sqlQueue.size());
             return sqlQueue.take();
         } catch (InterruptedException e) {
             e.printStackTrace();

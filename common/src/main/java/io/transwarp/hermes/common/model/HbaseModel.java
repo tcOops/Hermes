@@ -10,7 +10,7 @@ public class HbaseModel implements Cloneable{
     private long scn;
     private String tableName;
     private String rowKey;
-    private String columnFamily = "CLK";
+    private String columnFamily = "CLM";
     private List<String> columns;
     private List<String> values;
 
@@ -30,6 +30,8 @@ public class HbaseModel implements Cloneable{
     public String getTableName() {
         return tableName;
     }
+
+    public void setTableName(String tableName) { this.tableName = tableName; }
 
     public long getScn() {
         return scn;

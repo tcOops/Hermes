@@ -35,13 +35,17 @@ public class CompileManager implements Runnable{
     }
 
     public void sqlCompileCore(String sqlContent) {
-        System.out.println("curGet:  " + sqlContent);
+     //   System.out.println("curGet:  " + sqlContent);
         String[] contents = sqlContent.split("&&&");
         long scn = Long.parseLong(contents[0]);
         String operation = contents[1].split(" ")[0];
+        String regEx = "\"";
+        contents[1] = contents[1].replaceAll(regEx, "");
+        regEx = "\'";
+        contents[1] = contents[1].replaceAll(regEx, "");
 
         if(operation.equals("insert")) {
-            HbaseModel hbaseModel = generateHbaseModel(contents[1], scn);
+            HbaseModel hbaseModel = generatePutHbaseModel(contents[1], scn);
             try {
                 HbaseContainer.getInstance().push2PutQueue(hbaseModel);
             } catch(Exception e) {
@@ -56,7 +60,7 @@ public class CompileManager implements Runnable{
         }
     }
 
-    public HbaseModel generateHbaseModel(String sqlContent, long scn) {
+    public HbaseModel generatePutHbaseModel(String sqlContent, long scn) {
         String regEx = "\\.(.*?)\\((.*?)\\)"; //正则非贪婪匹配 (.*?)这里加个问号
         Pattern pattern = Pattern.compile(regEx);
         Matcher matcher = pattern.matcher(sqlContent);
@@ -77,7 +81,7 @@ public class CompileManager implements Runnable{
         ArrayList<String> values = new ArrayList<String>();
         String rowKey = valueBeforeFormat[0];
         for(int i = 1; i < valueBeforeFormat.length; ) {
-            if(valueBeforeFormat[i].length() >= 7 && valueBeforeFormat[i].substring(0, 6).equals("TO_DATE")) {
+            if(valueBeforeFormat[i].length() >= 7 && valueBeforeFormat[i].substring(0, 7).equals("TO_DATE")) {
                 values.add(valueBeforeFormat[i] + valueBeforeFormat[i+1]);
                 i += 2;
             }
@@ -86,7 +90,7 @@ public class CompileManager implements Runnable{
                 ++i;
             }
         }
-        HbaseModel hbaseModel = new HbaseModel(scn, tableName, DEFAULT_COLUMN_FAMILY, rowKey, columns, values);
+        HbaseModel hbaseModel = new HbaseModel(scn, tableName, rowKey, DEFAULT_COLUMN_FAMILY, columns, values);
         return hbaseModel;
     }
 
@@ -106,6 +110,7 @@ public class CompileManager implements Runnable{
       //  String[] columns = contents[2].split("\\(")[1].split("\\)")[0].split(",");
       //  System.out.println(tableName);
         String str = "insert into \"LOGMINER\".\"EMP\"(\"EMPNO\",\"ENAME\",\"JOB\",\"MGR\",\"HIREDATE\",\"SAL\",\"COMM\",\"DEPTNO\") values ('12022','JONES','MANAGER','7839',TO_DATE('02-APR-81', 'DD-MON-RR'),'2975',NULL,'20');";
-
+        str = "TO_DATE(02-APR-81";
+        System.out.println(str.substring(0, 8));
     }
 }

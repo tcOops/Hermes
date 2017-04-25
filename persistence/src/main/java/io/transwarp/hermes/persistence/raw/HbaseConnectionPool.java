@@ -111,6 +111,7 @@ public class HbaseConnectionPool {
 
             System.out.println("Creating Connection Pool now .... " + i);
         }
+        System.out.println("Current: " + System.currentTimeMillis());
     }
 
     public static HbaseConnectionPool getInstance() {

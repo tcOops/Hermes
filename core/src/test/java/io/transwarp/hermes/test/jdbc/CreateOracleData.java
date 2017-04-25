@@ -43,7 +43,7 @@ public class CreateOracleData {
                 break;
             }
 
-            for(int i = 1; i <= 1000; ++i) {
+            for(int i = 1; i <= 10000; ++i) {
                 conn.setAutoCommit(false);
                 String insertSQL = String.format("INSERT INTO EMP VALUES (%d,'JONES','MANAGER',7839,to_date('2-4-1981','dd-mm-yyyy'),2975,NULL,20)", beginId + i);
                 int statusCode = statement.executeUpdate(insertSQL);

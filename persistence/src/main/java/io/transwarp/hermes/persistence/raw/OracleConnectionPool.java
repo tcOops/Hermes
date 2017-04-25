@@ -16,7 +16,7 @@ public class OracleConnectionPool extends Object{
     private ArrayBlockingQueue<OracleConnection> freeConnQueue;
     private ArrayBlockingQueue<OracleConnection> activeConnQueue;
 
-    private Lock getConnectionLock;
+    private Lock  getConnectionLock;
     private Lock releaseConnectionLock;
 
     private OracleConnectionPool() {

@@ -14,7 +14,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 
 public class ConnectionFactory {
     public static Configuration configuration;
-    public static final String host = "127.0.0.1";
+    public static final String host = "10.0.0.104";
 
     static {
         configuration = HBaseConfiguration.create();

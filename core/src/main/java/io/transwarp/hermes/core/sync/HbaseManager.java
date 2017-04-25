@@ -7,6 +7,9 @@ import io.transwarp.hermes.core.hbase.HbaseJob;
 import io.transwarp.hermes.persistence.raw.HbaseConnection;
 import io.transwarp.hermes.persistence.raw.HbaseConnectionPool;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by rejudgex on 2/23/17.
  */
@@ -15,6 +18,7 @@ import io.transwarp.hermes.persistence.raw.HbaseConnectionPool;
 //并调用HbaseJob同步到hbase中
 
 public class HbaseManager implements Runnable{
+    private static final int UPD_UPPER_COUNT_ONE_GROUP = 3000;
     public SyncJobType jobType;
     HbaseConnection hbaseConnection = null;
 
@@ -31,8 +35,23 @@ public class HbaseManager implements Runnable{
         try {
             if (jobType.equals(SyncJobType.put)) {
                 while (true) {
-                    HbaseModel hbaseModel = HbaseContainer.getInstance().fetchHbaseFromPutQueue();
-                    HbaseJob.insertRecord(hbaseConnection.getHbaseConnection(), hbaseModel);
+                    List<HbaseModel> hbaseModelList = new ArrayList<HbaseModel>();
+                    int hbaseModelCount = 0;
+                    while(true) {
+                        if(HbaseContainer.getInstance().getPutQueueSize() == 0) {
+                            break;
+                        }
+                        HbaseModel hbaseModel = HbaseContainer.getInstance().fetchHbaseFromPutQueue();
+                        hbaseModelList.add(hbaseModel);
+                        ++hbaseModelCount;
+                        if(hbaseModelCount == UPD_UPPER_COUNT_ONE_GROUP) {
+                            break;
+                        }
+                    }
+                    if(hbaseModelList.size() != 0) {
+                        System.out.println("Group Number : " + hbaseModelCount);
+                        HbaseJob.insertRecordList(hbaseConnection.getHbaseConnection(), hbaseModelList);
+                    }
                 }
             }
             else if(jobType == SyncJobType.upd) {
